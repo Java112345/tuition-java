@@ -30,7 +30,8 @@ public class Booking {
         return review;
     }
 
-    public int getRating() {
-        return rating;
-    }
+public Integer getRating() {
+    return rating;
+}
+
 }

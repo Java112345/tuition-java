@@ -96,8 +96,9 @@ public class TuitionCentre {
             int count = lesson.bookings.size();
             List<Integer> ratings = new ArrayList<>();
             for (Booking b : lesson.bookings) {
-                if (b.rating != null) ratings.add(b.rating);
-            }
+            if (b.getRating() != null) ratings.add(b.getRating());
+        }
+
             double avg = ratings.isEmpty() ? 0 : ratings.stream().mapToInt(r -> r).average().orElse(0);
             System.out.printf("%s - %s %s %s: %d students, Avg Rating: %.2f%n",
                     lesson.date, lesson.day, lesson.timeSlot, lesson.subject, count, avg);
