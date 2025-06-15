@@ -1,7 +1,5 @@
 package main.java.com.ebtuition.service;
 
-import com.ebtuition.model.*;
-
 import main.java.com.ebtuition.model.Booking;
 import main.java.com.ebtuition.model.Lesson;
 import main.java.com.ebtuition.model.Student;
