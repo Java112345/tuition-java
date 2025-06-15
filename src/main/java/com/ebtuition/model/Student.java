@@ -11,7 +11,8 @@ public class Student {
     public LocalDate dob;
     public String address;
     public String emergencyContact;
-    public List<Object> bookings = new ArrayList<>();
+    public List<Booking> bookings = new ArrayList<>();
+
 
     public Student(int studentId, String name, String gender, LocalDate dob, String address, String emergencyContact) {
         this.studentId = studentId;

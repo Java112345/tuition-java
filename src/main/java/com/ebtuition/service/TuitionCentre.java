@@ -118,4 +118,8 @@ public class TuitionCentre {
         System.out.println("\n--- Highest Income Subject ---");
         System.out.printf("%s: £%.2f%n", maxSubject, income.get(maxSubject));
     }
+    public List<Lesson> getAllLessons() {
+    return lessons;
+}
+
 }

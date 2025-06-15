@@ -10,7 +10,8 @@ public class Lesson {
     public String timeSlot;
     public double price;
     public LocalDate date;
-    public List<Object> bookings = new ArrayList<>();
+    public List<Booking> bookings = new ArrayList<>();
+
 
     public Lesson(String subject, String day, String timeSlot, double price, LocalDate date) {
         this.subject = subject;
@@ -19,4 +20,16 @@ public class Lesson {
         this.price = price;
         this.date = date;
     }
+    public String getSubject() {
+    return subject;
+}
+
+public LocalDate getDate() {
+    return date;
+}
+
+public String getTimeSlot() {
+    return timeSlot;
+}
+
 }
