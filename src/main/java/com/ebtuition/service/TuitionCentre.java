@@ -1,11 +1,10 @@
-package main.java.com.ebtuition.service;
-
-import main.java.com.ebtuition.model.Booking;
-import main.java.com.ebtuition.model.Lesson;
-import main.java.com.ebtuition.model.Student;
+package com.ebtuition.service;
 
 import java.time.LocalDate;
 import java.util.*;
+import com.ebtuition.model.Student;
+import com.ebtuition.model.Lesson;
+import com.ebtuition.model.Booking;
 
 public class TuitionCentre {
     public Map<Integer, Student> students = new HashMap<>();
@@ -18,7 +17,11 @@ public class TuitionCentre {
     );
 
     public void addStudent(Student student) {
-        students.put(student.studentId, student);
+        if (student != null && student.getId() > 0) {
+            students.put(student.getId(), student);
+        } else {
+            System.out.println("Invalid student ID or student is null: " + student);
+        }
     }
 
     public void createLessons(LocalDate startDate) {
@@ -42,13 +45,18 @@ public class TuitionCentre {
         if (student == null) return null;
 
         for (Lesson lesson : lessons) {
-            if (lesson.subject.equals(subject) && lesson.date.equals(date) && lesson.timeSlot.equals(timeSlot)) {
+            if (lesson.getSubject().equals(subject) &&
+                lesson.getDate().equals(date) &&
+                lesson.getTimeSlot().equals(timeSlot)) {
+
                 if (lesson.bookings.size() < 4) {
                     for (Booking b : student.bookings) {
-                        if (b.lesson.date.equals(date) && b.lesson.timeSlot.equals(timeSlot)) {
-                            return null;
+                        if (b.getLesson().getDate().equals(date) &&
+                            b.getLesson().getTimeSlot().equals(timeSlot)) {
+                            return null; // time conflict
                         }
                     }
+
                     Booking booking = new Booking(student, lesson);
                     student.bookings.add(booking);
                     lesson.bookings.add(booking);
@@ -60,22 +68,25 @@ public class TuitionCentre {
     }
 
     public void cancelBooking(Booking booking) {
-        if (booking.status.equals("booked")) {
-            booking.status = "cancelled";
-            booking.student.bookings.remove(booking);
-            booking.lesson.bookings.remove(booking);
+        if (booking.getStatus().equals("booked")) {
+            booking.setStatus("cancelled");
+            booking.getStudent().bookings.remove(booking);
+            booking.getLesson().bookings.remove(booking);
         }
     }
 
     public Booking changeBooking(Booking booking, LocalDate newDate, String newTime) {
-        if (!"booked".equals(booking.status)) return null;
-        String subject = booking.lesson.subject;
+        if (!"booked".equals(booking.getStatus())) return null;
+        String subject = booking.getLesson().getSubject();
 
         for (Lesson lesson : lessons) {
-            if (lesson.subject.equals(subject) && lesson.date.equals(newDate) && lesson.timeSlot.equals(newTime)) {
+            if (lesson.getSubject().equals(subject) &&
+                lesson.getDate().equals(newDate) &&
+                lesson.getTimeSlot().equals(newTime)) {
+
                 if (lesson.bookings.size() < 4) {
                     cancelBooking(booking);
-                    return bookLesson(booking.student.studentId, subject, newDate, newTime);
+                    return bookLesson(booking.getStudent().getId(), subject, newDate, newTime);
                 }
             }
         }
@@ -96,12 +107,12 @@ public class TuitionCentre {
             int count = lesson.bookings.size();
             List<Integer> ratings = new ArrayList<>();
             for (Booking b : lesson.bookings) {
-            if (b.getRating() != null) ratings.add(b.getRating());
-        }
+                if (b.getRating() != null) ratings.add(b.getRating());
+            }
 
             double avg = ratings.isEmpty() ? 0 : ratings.stream().mapToInt(r -> r).average().orElse(0);
             System.out.printf("%s - %s %s %s: %d students, Avg Rating: %.2f%n",
-                    lesson.date, lesson.day, lesson.timeSlot, lesson.subject, count, avg);
+                    lesson.getDate(), lesson.day, lesson.getTimeSlot(), lesson.getSubject(), count, avg);
         }
     }
 
@@ -109,17 +120,24 @@ public class TuitionCentre {
         Map<String, Double> income = new HashMap<>();
         for (Lesson lesson : lessons) {
             for (Booking b : lesson.bookings) {
-                if (List.of("booked", "attended").contains(b.status)) {
-                    income.merge(lesson.subject, lesson.price, Double::sum);
+                if (List.of("booked", "attended").contains(b.getStatus())) {
+                    income.merge(lesson.getSubject(), lesson.price, Double::sum);
                 }
             }
         }
-        String maxSubject = Collections.max(income.entrySet(), Map.Entry.comparingByValue()).getKey();
-        System.out.println("\n--- Highest Income Subject ---");
-        System.out.printf("%s: £%.2f%n", maxSubject, income.get(maxSubject));
+        if (!income.isEmpty()) {
+            String maxSubject = Collections.max(income.entrySet(), Map.Entry.comparingByValue()).getKey();
+            System.out.println("\n--- Highest Income Subject ---");
+            System.out.printf("%s: £%.2f%n", maxSubject, income.get(maxSubject));
+        }
     }
-    public List<Lesson> getAllLessons() {
-    return lessons;
-}
 
+    public List<Lesson> getAllLessons() {
+        return lessons;
+    }
+
+    public void attendLesson(Lesson l1) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'attendLesson'");
+    }
 }
