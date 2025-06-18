@@ -140,4 +140,33 @@ public class TuitionCentre {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'attendLesson'");
     }
+
+    public double getIncomeForSubject(String subject) {
+    double income = 0.0;
+
+    for (Lesson lesson : lessons) {
+        if (lesson.getSubject().equals(subject)) {
+            for (Booking booking : lesson.getBookings()) {
+                if (!booking.getStatus().equals("cancelled")) {
+                    income += lesson.price;
+                }
+            }
+        }
+    }
+
+    return income;
+}
+public List<Booking> getAllBookings() {
+    List<Booking> allBookings = new ArrayList<>();
+    for (Lesson lesson : getAllLessons()) {
+        allBookings.addAll(lesson.getBookings());
+    }
+    return allBookings;
+}
+public Collection<Student> getAllStudents() {
+    return students.values();
+}
+
+
+
 }

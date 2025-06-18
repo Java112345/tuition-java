@@ -29,6 +29,45 @@ public class Main {
     centre.addStudent(s);
 }
 
+// Test cancelBooking
+Booking cancelTest = null;
+for (Booking b : centre.getAllBookings()) {
+    if (b.getStatus().equals("booked")) {
+        cancelTest = b;
+        break;
+    }
+}
+if (cancelTest != null) {
+    centre.cancelBooking(cancelTest);
+    System.out.println("\nCancelled booking for: " + cancelTest.getStudent().getName() +
+            ", Subject: " + cancelTest.getLesson().getSubject());
+} else {
+    System.out.println("\nNo booking found to cancel.");
+}
+
+// Test changeBooking
+Booking changeTest = null;
+for (Booking b : centre.getAllBookings()) {
+    if (b.getStatus().equals("booked")) {
+        changeTest = b;
+        break;
+    }
+}
+if (changeTest != null) {
+    LocalDate newDate = changeTest.getLesson().getDate().plusWeeks(1);
+    String newTimeSlot = changeTest.getLesson().getTimeSlot().equals("Morning") ? "Afternoon" : "Morning";
+
+    Booking changed = centre.changeBooking(changeTest, newDate, newTimeSlot);
+    if (changed != null) {
+        System.out.println("\nChanged booking to new date: " + newDate + " and time slot: " + newTimeSlot);
+    } else {
+        System.out.println("\nChange booking failed.");
+    }
+} else {
+    System.out.println("\nNo booking found to change.");
+}
+
+
 
         // ✅ Debug check to confirm students are added
         if (centre.students.isEmpty()) {
@@ -76,4 +115,5 @@ public class Main {
         centre.reportStudentsPerLesson();
         centre.reportHighestIncomeSubject();
     }
+    
 }

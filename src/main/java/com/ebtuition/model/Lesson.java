@@ -48,5 +48,10 @@ public boolean addStudent(Student student) {
     }
 }
 
+public List<Booking> getBookings() {
+    return this.bookings;
+}
+
+
 
 }

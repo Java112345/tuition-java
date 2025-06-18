@@ -1,5 +1,7 @@
 package com.ebtuition.model;
 
+import java.util.List;
+
 public class Booking {
     private Student student;
     private Lesson lesson;
@@ -58,4 +60,7 @@ public class Booking {
     public void setStatus(String status) {
     this.status = status;
 }
+
+
+
 }
